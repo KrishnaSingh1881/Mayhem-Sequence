@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎮 Mayhem-Sequence
 
-## Getting Started
+**Mayhem-Sequence** is an elite game development operations (GameOps) platform designed to bridge the gap between player feedback, quality assurance, and release management. Built for high-performance studios, it provides automated regression checking, AI-powered sentiment clustering, and release readiness reporting.
 
-First, run the development server:
+---
 
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- SQLite3 (Included)
+- Ollama (Optional, for local AI features)
+
+### Installation
 ```bash
+# Install dependencies
+npm install
+
+# Seed the database (creates admin@mayhem.com / password123)
+npm run seed
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Credentials
+Refer to [CRED.md](./CRED.md) for initial login details.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ Core Features
 
-## Learn More
+- **🤖 AI Feedback Clustering**: Automatically groups player feedback into actionable developer insights using LLMs.
+- **🛡️ Automated Regression Check**: Compares new issues against previously resolved ones to flag regressions instantly.
+- **📋 Release Readiness Reports**: Generates AI-scored reports on build stability, sentiment trends, and blocker status.
+- **📊 Analytics Dashboard**: High-fidelity visualization of feedback volume, sentiment trends, and resolution rates.
+- **🏆 Tester Leaderboard**: Gamified QA tracking to reward the most impactful contributors.
+- **🔗 Feedback Tokens**: Secure, build-specific links for Discord, Reddit, and private beta communities.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🏗️ Architecture at a Glance
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```mermaid
+graph TD
+    User((User)) -->|HTTPS| NextJS[Next.js 14 App Router]
+    NextJS -->|Auth| Middleware[Middleware / JWT]
+    NextJS -->|Data| SQLite[(SQLite / Better-SQLite3)]
+    NextJS -->|AI Analysis| LLM[Gemma 4 / AI Engine]
+    NextJS -->|Files| Storage[Local FS Storage]
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📚 Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Detailed documentation is available in the [/documentation](./documentation) folder:
+
+- [**System Architecture & Flows**](./documentation/SYSTEM.md): Deep dive into the internal working of Mayhem-Sequence.
+- [**Testing Guide**](./documentation/TESTING.md): Instructions for verifying platform stability and features.
+- [**API Reference**](./documentation/API.md): (Planned) Technical endpoint documentation.
+
+---
+
+## 🛡️ License
+MIT License - Developed for Modern Game Studios.

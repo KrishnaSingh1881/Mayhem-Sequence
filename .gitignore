@@ -34,3 +34,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local app storage
+/uploads
+/data
+# Added by code-review-graph
+.code-review-graph/
+graphify-out/
+debug.log
+.agent/
+.claude/

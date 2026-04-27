@@ -3,25 +3,107 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cream: #f5f0e8;
+  --black: #0d0d0d;
+  --yellow: #ffe047;
+  --coral: #ff6b47;
+  --green: #4ae068;
+  --purple: #c084fc;
+  --blue: #60a5fa;
+  --amber: #f59e0b;
+  --border: 2.5px solid #0d0d0d;
+  --shadow: 4px 4px 0px #0d0d0d;
+  --shadow-lg: 6px 6px 0px #0d0d0d;
+  --shadow-xl: 8px 8px 0px #0d0d0d;
+  --sidebar-w: 240px;
+  --sidebar-collapsed-w: 56px;
+  --font-display: "Syne", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-display);
+  background: var(--cream);
+  color: var(--black);
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@layer components {
+  .ms-mono {
+    font-family: var(--font-mono);
+  }
+
+  .ms-btn {
+    border: var(--border);
+    box-shadow: var(--shadow);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+
+  .ms-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .ms-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(13, 13, 13, 0.05) 25%,
+      rgba(13, 13, 13, 0.1) 50%,
+      rgba(13, 13, 13, 0.05) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: var(--border);
+    border-radius: 0.75rem;
+    background: white;
+  }
+
+  .table-container::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  .table-container::-webkit-scrollbar-track {
+    background: var(--cream);
+    border-top: 1.5px solid var(--black);
+    border-radius: 0 0 0.75rem 0.75rem;
+  }
+
+  .table-container::-webkit-scrollbar-thumb {
+    background: var(--black);
+    border-radius: 10px;
+  }
+
+  .table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--coral);
   }
 }
