@@ -296,6 +296,18 @@ export default function ProjectFeedbackPage({ params }: PageProps) {
     }
   }, [showToast]);
 
+  const fetchDebriefs = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/projects/${params.id}/debriefs`);
+      if (res.ok) {
+        const data = await res.json();
+        setPastDebriefs(Array.isArray(data) ? data : data.data || []);
+      }
+    } catch {
+      // non-critical, swallow
+    }
+  }, [params.id]);
+
   const loadPage = useCallback(async () => {
     try {
       setLoading(true);
@@ -332,7 +344,7 @@ export default function ProjectFeedbackPage({ params }: PageProps) {
     } finally {
       setLoading(false);
     }
-  }, [params.id, fetchSavedFilters, fetchTokens, fetchFeedback, fetchClusterData]);
+  }, [params.id, fetchSavedFilters, fetchTokens, fetchFeedback, fetchClusterData, fetchDebriefs]);
 
   useEffect(() => {
     loadPage();

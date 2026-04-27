@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Box,
@@ -18,6 +19,9 @@ import {
   Bell,
   Search,
   Download,
+  LogOut,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 interface NavItem {
@@ -71,10 +75,30 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     { label: "Settings", href: pid ? `/project/${pid}/settings` : "/", icon: <Settings size={20} /> },
   ];
 
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [projectName, setProjectName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!pid) { setProjectName(null); return; }
+    fetch(`/api/projects/${pid}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data?.project?.name) setProjectName(data.project.name); })
+      .catch(() => null);
+  }, [pid]);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } finally {
+      router.push("/login");
+    }
+  };
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -84,6 +108,32 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       })
       .catch(() => null);
   }, []);
+
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("ms_theme") as "light" | "dark" | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setTheme("dark");
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("ms_theme", newTheme);
+    if (newTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -209,14 +259,34 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 {user?.name?.slice(0, 2).toUpperCase() || "??"}
               </div>
               {(!collapsed || !isDesktop) && (
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold truncate">{user?.name || "Guest"}</p>
                   <p className="text-[10px] opacity-50 ms-mono truncate">
                     {user?.email || "Not logged in"}
                   </p>
                 </div>
               )}
+              {(!collapsed || !isDesktop) && (
+                <button
+                  onClick={handleLogout}
+                  disabled={loggingOut}
+                  title="Log out"
+                  className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-[#888] hover:bg-white/10 hover:text-[var(--coral,#ff6b6b)] transition-colors disabled:opacity-40"
+                >
+                  <LogOut size={16} />
+                </button>
+              )}
             </div>
+            {collapsed && isDesktop && (
+              <button
+                onClick={handleLogout}
+                disabled={loggingOut}
+                title="Log out"
+                className="mt-2 w-full flex items-center justify-center h-9 rounded-lg text-[#888] hover:bg-white/10 hover:text-[var(--coral,#ff6b6b)] transition-colors disabled:opacity-40"
+              >
+                <LogOut size={16} />
+              </button>
+            )}
           </div>
         </div>
       </aside>
@@ -228,25 +298,45 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {!isDesktop && (
               <button
                 onClick={() => setMobileOpen(true)}
-                className="p-2 border-[2.5px] border-black bg-white shadow-[2px_2px_0px_#0d0d0d] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
+                className="p-2 border-[2.5px] border-black bg-[var(--cream)] shadow-[var(--shadow)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
+                aria-label="Open navigation menu"
               >
                 <Menu size={20} />
               </button>
             )}
-            <h1 className="text-xl font-black uppercase tracking-tight">
-              {pathname === "/" ? "Dashboard" : pathname?.split("/").pop()?.replace(/-/g, " ")}
-            </h1>
+            <div className="flex items-center gap-2 ms-mono text-[13px] font-bold tracking-tight">
+              <Link 
+                href="/" 
+                className="text-[#666] dark:text-[#aaa] hover:text-black dark:hover:text-white transition-colors"
+              >
+                PROJECTS
+              </Link>
+              <span className="text-[#999]">/</span>
+              <span className="text-black dark:text-white uppercase truncate max-w-[180px]">
+                {projectName || (activeProjectId ? "..." : "OVERVIEW")}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="hidden md:flex items-center gap-2 px-3 h-10 border-[2.5px] border-black bg-white shadow-[2px_2px_0px_#0d0d0d] ms-mono text-sm font-bold">
+            <button className="hidden md:flex items-center gap-2 px-3 h-10 border-[2.5px] border-black bg-white dark:bg-zinc-800 shadow-[var(--shadow)] ms-mono text-sm font-bold hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all active:scale-95">
               <Search size={16} />
               <span>Search...</span>
             </button>
-            <button className="p-2 border-[2.5px] border-black bg-white shadow-[2px_2px_0px_#0d0d0d]">
+            <button 
+              onClick={toggleTheme}
+              className="p-2 border-[2.5px] border-black bg-[var(--cream)] shadow-[var(--shadow)] hover:bg-[var(--yellow)] transition-colors active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
+              aria-label={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+            >
+              {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
+            <button 
+              className="p-2 border-[2.5px] border-black bg-[var(--cream)] shadow-[var(--shadow)]"
+              aria-label="View notifications"
+            >
               <Bell size={20} />
             </button>
-            <button className="hidden sm:flex items-center gap-2 px-4 h-10 border-[2.5px] border-black bg-[var(--yellow)] shadow-[2px_2px_0px_#0d0d0d] text-sm font-bold active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all">
+            <button className="hidden sm:flex items-center gap-2 px-4 h-10 border-[2.5px] border-black bg-[var(--yellow)] shadow-[var(--shadow)] text-sm font-bold hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all active:scale-95">
               <Download size={18} />
               <span>Export</span>
             </button>

@@ -1,0 +1,376 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+#root{
+  width:100%;height:600px;
+  background:#0d0d0d;
+  position:relative;overflow:hidden;
+  font-family:'Syne',sans-serif;
+}
+
+.ha-layer{
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+  overflow:hidden;
+}
+.ha-row{
+  position:absolute;white-space:nowrap;
+  font-family:'IBM Plex Mono',monospace;
+  font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:0.08em;
+  animation:scrollha 18s linear infinite;
+  opacity:0.07;
+}
+.ha-row:nth-child(odd){color:#F5C800;animation-duration:22s;}
+.ha-row:nth-child(even){color:#cc0033;animation-direction:reverse;animation-duration:20s;}
+@keyframes scrollha{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+.divider{
+  position:absolute;left:50%;top:0;bottom:0;
+  width:4px;background:#F5C800;
+  border-left:2px solid #0d0d0d;
+  z-index:10;
+}
+
+.joker-side{
+  position:absolute;left:0;top:0;width:50%;height:100%;
+  background:#150030;
+  overflow:hidden;
+}
+.joker-img{
+  position:absolute;bottom:0;left:50%;
+  transform:translateX(-48%);
+  height:92%;width:auto;
+  object-fit:contain;
+  object-position:bottom;
+  filter:drop-shadow(0 0 0 transparent);
+  z-index:3;
+}
+.joker-label{
+  position:absolute;top:16px;left:16px;z-index:5;
+}
+.tag{
+  display:inline-block;
+  padding:4px 12px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.15em;
+  border:2.5px solid #0d0d0d;
+  box-shadow:2px 2px 0 #0d0d0d;
+}
+
+.harley-side{
+  position:absolute;right:0;top:0;width:50%;height:100%;
+  background:#200010;
+  overflow:hidden;
+}
+.harley-img{
+  position:absolute;bottom:0;right:-2%;
+  height:88%;width:auto;
+  object-fit:contain;
+  object-position:bottom;
+  z-index:3;
+}
+
+.hero-content{
+  position:absolute;top:0;left:0;
+  width:55%;height:100%;
+  z-index:5;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:28px 20px 28px 24px;
+}
+.hero-eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;font-weight:700;
+  color:#FF5A3C;letter-spacing:0.2em;
+  text-transform:uppercase;margin-bottom:10px;
+}
+.hero-h1{
+  font-size:clamp(28px,4.5vw,46px);
+  font-weight:800;
+  color:#F5C800;
+  text-transform:uppercase;
+  line-height:0.92;
+  letter-spacing:-0.03em;
+  margin-bottom:10px;
+  position:relative;
+}
+.hero-h1 .white{color:#fff;}
+.hero-sub{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9.5px;color:#777;
+  line-height:1.7;margin-bottom:18px;
+  max-width:200px;
+}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;
+  padding:9px 16px;
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:11px;text-transform:uppercase;
+  letter-spacing:0.08em;
+  border:2.5px solid #0d0d0d;
+  box-shadow:3px 3px 0 #0d0d0d;
+  text-decoration:none;cursor:pointer;
+  transition:transform .1s,box-shadow .1s;
+}
+.btn:active{transform:translate(3px,3px);box-shadow:none;}
+.btn-y{background:#F5C800;color:#0d0d0d;}
+.btn-r{background:#FF5A3C;color:#0d0d0d;}
+
+.harley-bubble{
+  position:absolute;bottom:20px;left:24px;
+  background:#FF5A3C;
+  border:2.5px solid #0d0d0d;
+  box-shadow:3px 3px 0 #0d0d0d;
+  padding:5px 14px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:9px;font-weight:700;
+  color:#0d0d0d;text-transform:uppercase;
+  letter-spacing:0.1em;
+  animation:pulse 2.2s ease-in-out infinite;
+  z-index:8;white-space:nowrap;
+}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+
+.card-pool{
+  position:absolute;inset:0;
+  pointer-events:none;z-index:8;
+}
+.fc{
+  position:absolute;
+  width:62px;height:84px;
+  border:2.5px solid #0d0d0d;
+  box-shadow:3px 3px 0 #0d0d0d;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  font-family:'IBM Plex Mono',monospace;
+  font-weight:700;font-size:7.5px;
+  color:#0d0d0d;text-align:center;
+  text-transform:uppercase;letter-spacing:0.03em;
+  padding:4px 3px;line-height:1.3;
+  opacity:0;
+  will-change:transform,opacity;
+}
+.fc-suit{font-size:16px;margin-bottom:2px;line-height:1;}
+
+.bat{
+  position:absolute;
+  pointer-events:none;z-index:12;
+  opacity:0;
+}
+
+.hearts-layer{position:absolute;top:0;right:0;width:50%;height:60%;z-index:4;pointer-events:none;}
+.heart{
+  position:absolute;
+  font-size:18px;
+  animation:floatheart var(--dur) ease-in-out var(--del) infinite;
+  opacity:0;
+}
+@keyframes floatheart{
+  0%{opacity:0;transform:translateY(0) scale(0.5);}
+  20%{opacity:1;transform:translateY(-20px) scale(1);}
+  80%{opacity:0.6;transform:translateY(-80px) scale(0.8);}
+  100%{opacity:0;transform:translateY(-110px) scale(0.4);}
+}
+</style>
+
+<div id="root">
+
+  <div class="ha-layer">
+    <div class="ha-row" style="top:4%">HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA</div>
+    <div class="ha-row" style="top:13%">♦ WHY SO UNSHIPPED ♠ CHAOS MANAGED ♣ BUILD VERSIONING ♥ MAYHEM SEQUENCE ♦ WHY SO UNSHIPPED ♠ CHAOS MANAGED ♣</div>
+    <div class="ha-row" style="top:22%">HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA</div>
+    <div class="ha-row" style="top:31%">♥ ISSUE TRACKER ♦ REGRESSION DETECTED ♠ GO NO GO ♣ PERSONA CLUSTERS ♥ ISSUE TRACKER ♦ REGRESSION DETECTED</div>
+    <div class="ha-row" style="top:40%">HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA</div>
+    <div class="ha-row" style="top:49%">♦ SHIP IT ♠ OR DON'T ♣ THE CLOWN KNOWS ♥ BUILD v2.4.1 ♦ SHIP IT ♠ OR DON'T ♣ THE CLOWN KNOWS ♥ BUILD v2.4.1</div>
+    <div class="ha-row" style="top:58%">HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA</div>
+    <div class="ha-row" style="top:67%">♣ SELF HOSTED ♥ NO SUBSCRIPTIONS ♦ NEOBRUTALIST ♠ INDIE DEV CRM ♣ SELF HOSTED ♥ NO SUBSCRIPTIONS ♦ NEOBRUTALIST</div>
+    <div class="ha-row" style="top:76%">HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA</div>
+    <div class="ha-row" style="top:85%">♥ MR J SHIPS ON TIME ♦ MADNESS MANAGED ♠ FEEDBACK PIPELINE ♣ CHANGELOG EDITOR ♥ MR J SHIPS ON TIME ♦</div>
+    <div class="ha-row" style="top:94%">HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA</div>
+  </div>
+
+  <div class="joker-side">
+    <div class="joker-label">
+      <div class="tag" style="background:#F5C800;color:#0d0d0d;display:block;margin-bottom:5px;">THE JOKER</div>
+      <div class="tag" style="background:#2d0080;color:#a070ff;border-color:#a070ff;box-shadow:2px 2px 0 #a070ff;">Dealing the features</div>
+    </div>
+    <img class="joker-img" src="/mnt/user-data/uploads/1777315318301_image.png" alt="Joker on throne"/>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="harley-side">
+    <div class="hearts-layer" id="heartsLayer"></div>
+    <img class="harley-img" src="/mnt/user-data/uploads/1777316483059_image.png" alt="Harley Quinn"/>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">Mayhem-Sequence — Game Dev CRM</div>
+      <h1 class="hero-h1">
+        WHY SO<br>
+        <span class="white">UN</span>SHIPPED<span style="color:#FF5A3C;">?</span>
+      </h1>
+      <p class="hero-sub">
+        CRM for indie studios.<br>
+        Chaos organized. AI-powered.<br>
+        Self-hosted. No subscriptions.
+      </p>
+      <div class="btn-row">
+        <a href="/register" class="btn btn-y">[ Sign Up ]</a>
+        <a href="/login" class="btn btn-r">[ Log In ]</a>
+      </div>
+    </div>
+
+    <div class="harley-bubble" id="bubble">♥ Puddin ships on time! ♥</div>
+
+    <div style="position:absolute;top:16px;right:16px;z-index:6;display:flex;flex-direction:column;gap:5px;align-items:flex-end;">
+      <div class="tag" style="background:#FF5A3C;color:#0d0d0d;">HARLEY QUINN</div>
+      <div class="tag" style="background:#200010;color:#FF5A3C;border-color:#FF5A3C;box-shadow:2px 2px 0 #FF5A3C;">♥ Mr. J's #1 Fan</div>
+    </div>
+  </div>
+
+  <div class="card-pool" id="cardPool"></div>
+
+</div>
+
+<script>
+const features=[
+  {suit:'♦',name:'Build\nVersioning',bg:'#F5C800'},
+  {suit:'♠',name:'Issue\nTracker',bg:'#c8b0ff'},
+  {suit:'♥',name:'Feedback\nPipeline',bg:'#FF5A3C',tc:'#fff'},
+  {suit:'♣',name:'Changelog\nEditor',bg:'#a0e8b0'},
+  {suit:'♦',name:'Analytics\nDash',bg:'#F5C800'},
+  {suit:'♠',name:'AI\nInsights',bg:'#c8b0ff'},
+  {suit:'♥',name:'Regression\nDetect',bg:'#FF5A3C',tc:'#fff'},
+  {suit:'♣',name:'Persona\nClusters',bg:'#a0e8b0'},
+  {suit:'♦',name:'Release\nReadiness',bg:'#F5C800'},
+  {suit:'♠',name:'Session\nDebrief',bg:'#c8b0ff'},
+  {suit:'♥',name:'Tester\nLeaderboard',bg:'#FF5A3C',tc:'#fff'},
+  {suit:'♣',name:'Webhooks\n& Alerts',bg:'#a0e8b0'},
+];
+
+const speeches=[
+  '♥ Puddin ships on time! ♥',
+  'He is SO talented!! ♦',
+  'Best CRM ever, Mr. J!!',
+  'OMG BUILDS!! ♥♥',
+  'Ha ha ha ha ha!!',
+  '♥ My puddin!! ♥',
+  'CHAOS MANAGED bestie!!',
+  'I LOVE YOU PUDDIN ♥',
+];
+
+const pool=document.getElementById('cardPool');
+const bubble=document.getElementById('bubble');
+const heartsLayer=document.getElementById('heartsLayer');
+let cardIdx=0;
+let allDealt=false;
+let dealCount=0;
+
+function createHeart(x,y){
+  const h=document.createElement('div');
+  h.className='heart';
+  const colors=['#FF5A3C','#ff0055','#F5C800','#ff6699'];
+  h.style.color=colors[Math.floor(Math.random()*colors.length)];
+  h.style.left=x+'%';
+  h.style.top=y+'%';
+  h.style.setProperty('--dur',(1.5+Math.random()*1.5)+'s');
+  h.style.setProperty('--del',(Math.random()*0.5)+'s');
+  h.textContent='♥';
+  heartsLayer.appendChild(h);
+  setTimeout(()=>h.remove(),4000);
+}
+
+setInterval(()=>{
+  createHeart(20+Math.random()*60, 20+Math.random()*60);
+},600);
+
+function throwCard(){
+  const f=features[cardIdx%features.length];
+  const card=document.createElement('div');
+  card.className='fc';
+  card.style.background=f.bg;
+  card.style.color=f.tc||'#0d0d0d';
+
+  const startX=Math.random()*180+20;
+  const startY=200+Math.random()*200;
+  const endX=400+Math.random()*240;
+  const endY=80+Math.random()*420;
+  const rot=-40+Math.random()*80;
+  const dur=900+Math.random()*600;
+
+  card.innerHTML=`<div class="fc-suit">${f.suit}</div><div>${f.name.replace('\n','<br>')}</div>`;
+  card.style.left=startX+'px';
+  card.style.top=startY+'px';
+  card.style.transform=`rotate(${rot}deg)`;
+  pool.appendChild(card);
+
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      card.style.transition=`all ${dur}ms cubic-bezier(0.2,0.8,0.4,1)`;
+      card.style.opacity='1';
+      card.style.left=endX+'px';
+      card.style.top=endY+'px';
+      card.style.transform=`rotate(${rot+Math.random()*60-30}deg)`;
+    });
+  });
+
+  setTimeout(()=>{
+    card.style.transition='opacity 0.4s';
+    card.style.opacity='0';
+    setTimeout(()=>card.remove(),500);
+  },dur+1600);
+
+  cardIdx++;
+  dealCount++;
+
+  if(dealCount>=features.length&&!allDealt){
+    allDealt=true;
+    document.querySelector('.ha-layer').style.opacity='1';
+  }
+
+  bubble.textContent=speeches[cardIdx%speeches.length];
+}
+
+throwCard();
+setInterval(throwCard,1400);
+
+function launchBatarang(){
+  const bat=document.createElement('div');
+  bat.style.cssText=`position:absolute;pointer-events:none;z-index:12;opacity:0;top:${40+Math.random()*400}px;left:-60px;transition:none;`;
+
+  const size=30+Math.random()*20;
+  bat.innerHTML=`<svg width="${size}" height="${size*0.55}" viewBox="0 0 60 33">
+    <path d="M30 16 L0 0 L10 16 L0 33 Z" fill="#F5C800" stroke="#0d0d0d" stroke-width="2"/>
+    <path d="M30 16 L60 0 L50 16 L60 33 Z" fill="#F5C800" stroke="#0d0d0d" stroke-width="2"/>
+    <ellipse cx="30" cy="16" rx="5" ry="5" fill="#0d0d0d"/>
+  </svg>`;
+
+  document.getElementById('root').appendChild(bat);
+
+  const top=parseInt(bat.style.top);
+  const dur=1800+Math.random()*1200;
+  const rotSpeed=360+Math.random()*720;
+
+  let start=null;
+  function animate(ts){
+    if(!start)start=ts;
+    const p=(ts-start)/dur;
+    if(p>=1){bat.remove();return;}
+    const x=-60+p*780;
+    const endY=top+(Math.random()>0.5?-1:1)*60*Math.sin(p*Math.PI);
+    bat.style.opacity=p<0.1?p*10:p>0.9?(1-p)*10:1;
+    bat.style.transform=`translate(${x}px,${endY-top}px) rotate(${p*rotSpeed}deg)`;
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+}
+
+launchBatarang();
+setInterval(launchBatarang,3500+Math.random()*2000);
+setInterval(()=>{
+  setTimeout(launchBatarang,Math.random()*1000);
+},5000);
+</script>

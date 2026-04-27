@@ -306,8 +306,11 @@ export default function ProjectPage({ params }: PageProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold">{data.project.name}</h1>
-          <p className="ms-mono text-xs opacity-60">ID: {data.project.id}</p>
+          <h1 className="text-4xl font-black uppercase tracking-tighter">Overview</h1>
+          <div className="flex items-center gap-2 mt-1">
+            <div className="px-2 py-0.5 border-2 border-black bg-[var(--yellow)] text-[10px] font-bold uppercase tracking-tight">Active Project</div>
+            <span className="ms-mono text-[10px] opacity-40">REF: {data.project.id.slice(0, 8)}...</span>
+          </div>
         </div>
         <div className="flex gap-2">
           <Link href={`/project/${params.id}/settings`}>
@@ -330,8 +333,9 @@ export default function ProjectPage({ params }: PageProps) {
             <button
               type="button"
               disabled={alertBusy}
-              className="h-7 w-7 rounded border-2 border-black bg-white font-bold hover:translate-y-[-2px] active:translate-y-[0px] transition-transform shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              className="h-7 w-7 rounded border-2 border-black bg-[var(--cream)] font-bold hover:translate-y-[-2px] active:translate-y-[0px] transition-transform shadow-[2px_2px_0px_0px_var(--black)]"
               onClick={dismissAlert}
+              aria-label="Dismiss alert"
             >
               ×
             </button>
@@ -346,7 +350,7 @@ export default function ProjectPage({ params }: PageProps) {
           {data.mainBuild ? <LabelBadge label={data.mainBuild.label} className="mt-2" /> : <p className="text-xs mt-1 opacity-60">No main build promoted</p>}
         </div>
         
-        <div className="rounded-lg border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="rounded-lg border-2 border-black bg-[var(--cream)] p-4 shadow-[var(--shadow)]">
           <p className="text-[10px] font-bold uppercase tracking-wider opacity-60">Open Issues</p>
           <p className="mt-2 text-3xl font-extrabold">{data.openIssues.length}</p>
           <div className="mt-1 flex items-center gap-1 text-[10px] font-bold">
@@ -357,7 +361,7 @@ export default function ProjectPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="rounded-lg border-2 border-black bg-[var(--coral)] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="rounded-lg border-2 border-black bg-[var(--coral)] p-4 shadow-[var(--shadow)]">
           <p className="text-[10px] font-bold uppercase tracking-wider opacity-60">Recent Feedback</p>
           <p className="mt-2 text-3xl font-extrabold">{data.feedbackRecent.length}</p>
           <div className="mt-1 flex items-center gap-1 text-[10px] font-bold">
@@ -368,7 +372,7 @@ export default function ProjectPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="rounded-lg border-2 border-black bg-black p-4 text-[var(--cream)] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="rounded-lg border-2 border-black bg-black dark:bg-[var(--black)] p-4 text-[var(--cream)] shadow-[var(--shadow)]">
           <p className="text-[10px] font-bold uppercase tracking-wider opacity-40">Health Score</p>
           {data.role === "qa" || data.role === "player" ? (
             <p className="mt-3 text-sm font-bold">LOCKED FOR ROLE</p>
@@ -388,7 +392,7 @@ export default function ProjectPage({ params }: PageProps) {
       </section>
 
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-lg border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="rounded-lg border-2 border-black bg-[var(--cream)] p-5 shadow-[var(--shadow)]">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-extrabold uppercase tracking-tight">Issue Breakdown</h2>
             <Link href={`/project/${params.id}/issues`} className="text-xs font-bold underline hover:no-underline">
@@ -399,7 +403,7 @@ export default function ProjectPage({ params }: PageProps) {
             {(["blocker", "critical", "high", "medium", "low"] as const).map((priority) => (
               <div key={priority} className="grid grid-cols-[80px_1fr_30px] items-center gap-4 text-[10px] font-bold">
                 <div className="uppercase tracking-widest opacity-60">{priority}</div>
-                <div className="h-2.5 rounded-full border border-black bg-[#f2f2f2] overflow-hidden">
+                <div className="h-2.5 rounded-full border border-black bg-black/5 overflow-hidden">
                   <div
                     className="h-full"
                     style={{ 
@@ -414,7 +418,7 @@ export default function ProjectPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="rounded-lg border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="rounded-lg border-2 border-black bg-[var(--cream)] p-5 shadow-[var(--shadow)]">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-extrabold uppercase tracking-tight">Pulse Feed</h2>
             <Link href={`/project/${params.id}/feedback`} className="text-xs font-bold underline hover:no-underline">
@@ -423,7 +427,7 @@ export default function ProjectPage({ params }: PageProps) {
           </div>
           <div className="space-y-3">
             {data.feedbackRecent.slice(0, 4).map((entry) => (
-              <div key={entry.id} className="flex items-center gap-3 rounded-md border-2 border-black p-2 bg-[var(--cream)] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+              <div key={entry.id} className="flex items-center gap-3 rounded-md border-2 border-black p-2 bg-white/5 shadow-[2px_2px_0px_0px_var(--black)]">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-xs font-bold">{excerpt(entry)}</p>
                   <p className="ms-mono text-[9px] opacity-60">{"★".repeat(entry.rating)} • {entry.category_tag}</p>

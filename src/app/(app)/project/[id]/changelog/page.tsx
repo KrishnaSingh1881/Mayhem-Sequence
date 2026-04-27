@@ -40,6 +40,7 @@ export default function ChangelogEditorPage() {
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pendingFocus, setPendingFocus] = useState<{ section: string; index: number } | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -152,6 +153,16 @@ export default function ChangelogEditorPage() {
     }
   };
 
+  useEffect(() => {
+    if (pendingFocus) {
+      const el = document.getElementById(`input-${pendingFocus.section}-${pendingFocus.index}`);
+      if (el) {
+        (el as HTMLInputElement).focus();
+        setPendingFocus(null);
+      }
+    }
+  }, [pendingFocus]);
+
   const renderSection = (title: string, items: string[], setItems: (vals: string[]) => void, color: string) => (
     <div className="space-y-3">
       <h3 className="flex items-center gap-2 text-xs font-black uppercase tracking-widest" style={{ color }}>
@@ -162,6 +173,7 @@ export default function ChangelogEditorPage() {
         {items.map((item, idx) => (
           <div key={idx} className="group flex gap-2">
             <input
+              id={`input-${title}-${idx}`}
               type="text"
               value={item}
               onChange={(e) => {
@@ -169,12 +181,21 @@ export default function ChangelogEditorPage() {
                 next[idx] = e.target.value;
                 setItems(next);
               }}
-              className="flex-1 rounded border-2 border-slate-200 bg-white px-3 py-2 text-sm font-medium transition focus:border-black focus:ring-0"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && e.shiftKey) {
+                  e.preventDefault();
+                  const next = [...items];
+                  next.splice(idx + 1, 0, "");
+                  setItems(next);
+                  setPendingFocus({ section: title, index: idx + 1 });
+                }
+              }}
+              className="flex-1 rounded-none border-2 border-black bg-white px-3 py-2 text-sm font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all focus:translate-x-[-1px] focus:translate-y-[-1px] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
               placeholder={`Add ${title.toLowerCase()}...`}
             />
             <button
               onClick={() => setItems(items.filter((_, i) => i !== idx))}
-              className="opacity-0 transition group-hover:opacity-100 hover:text-red-500"
+              className="flex h-10 w-10 items-center justify-center border-2 border-black bg-[var(--coral)] font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
             >
               ✕
             </button>
@@ -182,7 +203,7 @@ export default function ChangelogEditorPage() {
         ))}
         <button
           onClick={() => setItems([...items, ""])}
-          className="text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-black"
+          className="ms-mono text-[10px] font-black uppercase tracking-wider text-black underline decoration-2 underline-offset-4 hover:text-[var(--blue)] transition-colors"
         >
           + Add Line
         </button>
@@ -230,11 +251,11 @@ export default function ChangelogEditorPage() {
               {selectedChangelog ? "Edit Changelog" : "New Changelog"}
             </h2>
             <div className="flex items-center gap-2">
-              <label className="text-[10px] font-bold uppercase text-slate-500">Build:</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-black">Build:</label>
               <select
                 value={currentBuildId}
                 onChange={(e) => setCurrentBuildId(e.target.value)}
-                className="rounded border border-black bg-white px-2 py-1 text-xs font-bold"
+                className="rounded-none border-2 border-black bg-white px-2 py-1 text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
               >
                 <option value="">Select Version</option>
                 {builds.map(b => <option key={b.id} value={b.id}>{b.version}</option>)}
@@ -255,9 +276,9 @@ export default function ChangelogEditorPage() {
         <div className="p-8 space-y-10">
           {error && <div className="rounded border-2 border-black bg-red-50 p-4 text-xs font-bold text-red-600">⚠️ {error}</div>}
           
-          <div className="rounded-lg bg-slate-50 p-4 border-2 border-dashed border-slate-200">
-             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center">
-               🧠 AI-generated content. Review before publishing.
+          <div className="rounded-none bg-black p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,255,157,0.3)]">
+             <p className="ms-mono text-[10px] font-black text-[var(--green)] uppercase tracking-widest text-center">
+               ▸ AI-GENERATED CONTENT. REVIEW BEFORE PUBLISHING.
              </p>
           </div>
 
@@ -271,23 +292,25 @@ export default function ChangelogEditorPage() {
             <div className="flex items-center gap-6">
               <span className="text-xs font-black uppercase tracking-widest">Status</span>
               <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer group">
                   <input 
                     type="radio" 
                     checked={!isPublished} 
                     onChange={() => setIsPublished(false)}
-                    className="accent-black"
+                    className="sr-only"
                   />
-                  <span className="text-xs font-bold">Draft</span>
+                  <div className={`h-4 w-4 border-2 border-black transition-all ${!isPublished ? 'bg-[var(--yellow)] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'bg-white'}`} />
+                  <span className={`text-xs font-black uppercase tracking-tight transition-colors ${!isPublished ? 'text-black' : 'text-slate-400 group-hover:text-black'}`}>Draft</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer group">
                   <input 
                     type="radio" 
                     checked={isPublished} 
                     onChange={() => setIsPublished(true)}
-                    className="accent-black"
+                    className="sr-only"
                   />
-                  <span className="text-xs font-bold">Published</span>
+                  <div className={`h-4 w-4 border-2 border-black transition-all ${isPublished ? 'bg-[var(--green)] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'bg-white'}`} />
+                  <span className={`text-xs font-black uppercase tracking-tight transition-colors ${isPublished ? 'text-black' : 'text-slate-400 group-hover:text-black'}`}>Published</span>
                 </label>
               </div>
             </div>

@@ -97,7 +97,7 @@ const IssueRow = memo(({
   projectId: string 
 }) => (
   <tr
-    className={`cursor-pointer border-b border-[#ddd] hover:bg-[#fafafa] transition-colors ${
+    className={`cursor-pointer border-b border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${
       issue.status === "resolved" ? "opacity-60" : ""
     }`}
     onClick={() => {
@@ -133,7 +133,7 @@ const IssueRow = memo(({
     <td className="px-4 py-3">
       {issue.build_id ? <MonoBadge label={buildName || issue.build_id.slice(0, 8)} /> : "-"}
     </td>
-    <td className="px-4 py-3 text-xs font-bold text-[#888] ms-mono uppercase">
+    <td className="px-4 py-3 text-xs font-bold opacity-50 ms-mono uppercase">
       {relativeTime(issue.updated_at)}
     </td>
   </tr>
@@ -374,16 +374,16 @@ export default function ProjectIssuesPage({ params }: PageProps) {
       </div>
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-1 bg-black/5 p-1 rounded-lg border-[2px] border-black">
+        <div className="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-lg border-[2px] border-black">
           <button
             onClick={() => setView("list")}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-md font-bold text-sm transition-all ${view === "list" ? "bg-white shadow-[2px_2px_0px_#000]" : "opacity-50"}`}
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-md font-bold text-sm transition-all ${view === "list" ? "bg-[var(--cream)] shadow-[2px_2px_0px_var(--black)]" : "opacity-50"}`}
           >
             <LayoutList size={16} /> List
           </button>
           <button
             onClick={() => setView("kanban")}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-md font-bold text-sm transition-all ${view === "kanban" ? "bg-white shadow-[2px_2px_0px_#000]" : "opacity-50"}`}
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-md font-bold text-sm transition-all ${view === "kanban" ? "bg-[var(--cream)] shadow-[2px_2px_0px_var(--black)]" : "opacity-50"}`}
           >
             <Columns size={16} /> Kanban
           </button>
@@ -393,7 +393,7 @@ export default function ProjectIssuesPage({ params }: PageProps) {
           {savedFilters.map((f) => (
             <button
               key={f.id}
-              className="px-3 py-1.5 rounded-lg border-[2px] border-black bg-white text-xs font-bold shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-2"
+              className="px-3 py-1.5 rounded-lg border-[2px] border-black bg-[var(--cream)] text-xs font-bold shadow-[2px_2px_0px_var(--black)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center gap-2"
               onClick={() => {
                 const config = typeof f.filter_config === 'string' ? JSON.parse(f.filter_config) : f.filter_config;
                 setFilters({ ...DEFAULT_FILTERS, ...config });
@@ -410,13 +410,13 @@ export default function ProjectIssuesPage({ params }: PageProps) {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 p-4 rounded-xl border-[2.5px] border-black bg-white shadow-[4px_4px_0px_#000]">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 p-4 rounded-xl border-[2.5px] border-black bg-[var(--cream)] shadow-[var(--shadow)]">
         {(["priority", "status", "platform_tag", "category_tag"] as const).map(key => (
           <select
             key={key}
             value={filters[key]}
             onChange={(e) => setFilters(prev => ({ ...prev, [key]: e.target.value }))}
-            className="rounded-md border-[2px] border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider focus:ring-2 focus:ring-[var(--yellow)] outline-none"
+            className="rounded-md border-[2px] border-black bg-[var(--cream)] px-3 py-2 text-xs font-bold uppercase tracking-wider focus:ring-2 focus:ring-[var(--yellow)] outline-none"
           >
             <option value="all">{key.replace("_tag", "")}: All</option>
             {/* Options based on actual values would go here */}
@@ -477,7 +477,7 @@ export default function ProjectIssuesPage({ params }: PageProps) {
                   {issues.filter(i => i.status === status).map(issue => (
                     <div 
                       key={issue.id} 
-                      className="p-4 rounded-lg border-[2.5px] border-black bg-white shadow-[3px_3px_0px_#000] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all cursor-pointer"
+                      className="p-4 rounded-lg border-[2.5px] border-black bg-[var(--cream)] shadow-[3px_3px_0px_var(--black)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all cursor-pointer"
                       onClick={() => window.location.href = `/project/${params.id}/issues/${issue.id}`}
                     >
                        <p className="font-bold text-sm leading-tight mb-3">{issue.title}</p>

@@ -11,15 +11,27 @@
   --purple: #c084fc;
   --blue: #60a5fa;
   --amber: #f59e0b;
-  --border: 2.5px solid #0d0d0d;
-  --shadow: 4px 4px 0px #0d0d0d;
-  --shadow-lg: 6px 6px 0px #0d0d0d;
-  --shadow-xl: 8px 8px 0px #0d0d0d;
+  --border: 2.5px solid var(--black);
+  --shadow: 4px 4px 0px var(--black);
+  --shadow-lg: 6px 6px 0px var(--black);
+  --shadow-xl: 8px 8px 0px var(--black);
   --sidebar-w: 240px;
   --sidebar-collapsed-w: 56px;
   --font-display: "Syne", sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
 }
+
+.dark {
+  --cream: #121212;
+  --black: #f5f0e8;
+  --yellow: #fde047;
+  --coral: #ff7e5f;
+  --green: #5eead4;
+  --purple: #d8b4fe;
+  --blue: #93c5fd;
+  --amber: #fbbf24;
+}
+
 
 * {
   margin: 0;
